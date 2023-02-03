@@ -3,6 +3,8 @@ import random
 import os
 
 os.system("")
+
+
 class MyColors:
     RED = "\033[0;31m"
     GREEN = "\033[0;32m"
@@ -15,12 +17,14 @@ class MyColors:
     YELLOW = "\033[1;33m"
     WHITE = "\033[1;37m"
 
+
 class Numtrip:
     space = " "
     axis_x = ["A", "B", "C", "D", "E"]
     axis_y = ["0", "1", "2", "3", "4"]
     number = 0
-    colors = [MyColors.WHITE, MyColors.GREEN, MyColors.BLUE, MyColors.GREEN, MyColors.CYAN, MyColors.LIGHT_GRAY, MyColors.PURPLE, MyColors.BROWN, MyColors.YELLOW]
+    colors = [MyColors.WHITE, MyColors.GREEN, MyColors.BLUE, MyColors.GREEN, MyColors.CYAN,
+              MyColors.LIGHT_GRAY, MyColors.PURPLE, MyColors.BROWN, MyColors.YELLOW]
 
     def __init__(self):
 
@@ -72,33 +76,33 @@ class Numtrip:
 
     def printTable(self):
 
-        for idx, header in enumerate([MyColors.DARK_GRAY + ' '] + Numtrip.axis_x):
-            print(' ' + header, end='')
+        for idx, header in enumerate([MyColors.DARK_GRAY + ''] + Numtrip.axis_x):
+            print(' ' + header + '  ', end='')
 
         print()
 
         for idx, _axis_y in enumerate(self.actual_board):
-            print(MyColors.RED + ' ' + Numtrip.axis_y[idx], end='') # first column, reference board
-            for idx2,_axis_x in enumerate(_axis_y):
+            print(MyColors.RED + ' ' + Numtrip.axis_y[idx], end='')  # first column, reference board
+            for idx2, _axis_x in enumerate(_axis_y):
 
                 if _axis_x == -1:
                     print(MyColors.RED + ' ·', end='')
                 elif _axis_x > 0:
                     base2 = int(math.log(_axis_x, 2))
-                    print(self.colors[base2] + ' ' + str(_axis_x), end='')
+                    print(self.colors[base2] + (' ' * (3 - len(str(_axis_x)))) + str(_axis_x) + ' ', end='')
 
             print('')
 
-    def fill4(self, y, x,  choosenNumber):
+    def fill4(self, y, x, choosenNumber):
 
         if self.getValue(y, x) == self.selected_value:
             if choosenNumber:
-                if self.selected_value < self.limit  and self.check(y, x, self.selected_value):
+                if self.selected_value < self.limit and self.check(y, x, self.selected_value):
                     self.logger(f' y:{y} x:{x}')
-                    self.actual_board[y][x] = self.actual_board[y][x]*2
+                    self.actual_board[y][x] = self.actual_board[y][x] * 2
                 elif self.selected_value >= self.limit:
                     self.play = False
-                    score = 5002 - self.turns*2
+                    score = 5002 - self.turns * 2
                     print(f'You won! Your tries: {self.turns} and your score : {score}')
                 else:
                     print('The number could not be duplicated')
@@ -112,6 +116,7 @@ class Numtrip:
             self.fill4(y - 1, x, False)  # oben
             self.fill4(y, x + 1, False)  # rechts
             self.fill4(y, x - 1, False)  # links
+
     def check(self, y, x, searched_value):
         # print('searched ' + str(searched_value))
         v_pos_n = self.getValue(y - 1, x)
@@ -122,8 +127,8 @@ class Numtrip:
         if (searched_value == v_pos_o
             or searched_value == v_pos_e
             or searched_value == v_pos_n
-            or searched_value == v_pos_s):
-                return True
+                or searched_value == v_pos_s):
+            return True
         else:
             return False
 
@@ -146,14 +151,16 @@ class Numtrip:
             value = self.actual_board[y][pos_x]
             self.logger(f" ... ... ... {value}")
             if value != -1:
-                return {"y": y, "value": value }
+                return {"y": y, "value": value}
         return None
+
     def builder(self):
         newBoard = self.patern_board
         for y in range(len(self.axis_y)):
             for x in range(len(self.axis_x)):
-                newBoard[x][y]= 2**random.randint(0, 3)
+                newBoard[x][y] = 2**random.randint(0, 3)
         return newBoard
+
     def logger(self, message):
         if self.DEBUG:
             print(message)
